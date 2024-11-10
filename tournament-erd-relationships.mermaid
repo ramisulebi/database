@@ -1,0 +1,68 @@
+erDiagram
+    Tournament ||--o{ Series : "1:* (En turnering kan ha flera serier)"
+    Series ||--o{ Group : "1:* (En serie kan ha flera grupper)"
+    Series ||--o{ Playoff : "1:* (En serie kan ha flera slutspel)"
+    Group ||--o{ Team : "1:* (En grupp innehåller flera lag)"
+    Team }|--|| Club : "N:1 (Ett lag tillhör en förening)"
+    Team ||--o{ Match : "1:* (Ett lag kan spela flera matcher)"
+    Group ||--o{ Match : "1:* (En grupp innehåller flera matcher)"
+    Playoff ||--o{ Match : "1:* (Ett slutspel innehåller flera matcher)"
+
+    Tournament {
+        int tournament_id PK
+        string name
+        date start_date
+        date end_date
+        year season
+    }
+
+    Series {
+        int series_id PK
+        int tournament_id FK "Kopplar till Tournament"
+        string name
+        enum gender "pojk/flick"
+        int age_group
+        string level "A/B/C etc"
+    }
+
+    Group {
+        int group_id PK
+        int series_id FK "Kopplar till Series"
+        string name
+        int max_teams
+    }
+
+    Playoff {
+        int playoff_id PK
+        int series_id FK "Kopplar till Series"
+        string level "A/B/C-slutspel"
+        int stage "Fas i slutspelet"
+    }
+
+    Team {
+        int team_id PK
+        int club_id FK "Kopplar till Club"
+        int group_id FK "Kopplar till Group"
+        string name
+        int points
+        int goals_for
+        int goals_against
+    }
+
+    Club {
+        int club_id PK
+        string name
+        string city
+    }
+
+    Match {
+        int match_id PK
+        int home_team_id FK "Kopplar till Team (hemmalag)"
+        int away_team_id FK "Kopplar till Team (bortalag)"
+        int group_id FK "Kopplar till Group"
+        int playoff_id FK "Kopplar till Playoff"
+        datetime match_time
+        int home_score
+        int away_score
+        enum status
+    }
